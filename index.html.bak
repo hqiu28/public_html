@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Helen Qiu's Web Page</title>
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta name="generator" content="thesitewizard.com's Layout Wizard 4.0.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="all" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="tswnavbar.css">
+  </head>
+  <body style="          background:#D594D5">
+    <div id="tswcontainer">
+      <div id="tswheader" style="background: #C1C3E6">
+        <p><br>
+          <img src="images/All%20About%20Me.jpg" alt="Logo" title="All About Me"
+            style="width: 560px; height: 206px; display: block; margin: auto;">
+        </p>
+        <p>&nbsp;</p>
+        <div id="tswcontent" {="" style="background: #E6E6FA" }="">
+          <div id="tswcontproper">
+            <h1 style="color: purple; font-family: Times New Roman;">Welcome to
+              Helen's World!</h1>
+            <img src="images/Helen.jpg" alt="My Photo" title="Helen" style="width: 835px; height: 1150px;">
+            <h3>My name is Helen Qiu. I am a rising sophomore at Shrewsbury High
+              School. This is my web page! <br>
+              <p></p>
+              <p><br>
+              </p>
+              <p><br>
+              </p>
+              <img src="images/Shrewsbury%20High%20School.jpg" alt="Shrewsbury High School"
+                title="Amazing School" style="width: 839px; height: 1117px;">
+              <p>To know more about my school: <br>
+                <a href="https://schools.shrewsburyma.gov/high">Shrewsbury High
+                  School</a> </p>
+              <p> </p>
+            </h3>
+            <h2 style="color: purple;">Contact Information: </h2>
+            <p>Email: hqiu@wpi.edu </p>
+            <p> I was born in Shanghai, China on September 10th, 2009. I am 15
+              years old.<br>
+            </p>
+          </div>
+          <div style="clear: both;"></div>
+          <div id="tswfooter" style="background: #FDCAE8">
+            <p><br>
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <br> </p>
+            <h1><img src="images/Copyright.png" alt="Copyright logo" title="Copyright"
+                style="width: 51px; height: 29px;">&nbsp; All rights are
+              reserved </h1>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
+          <div style="background: #FDCAE8"><br>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1> </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tswsidecol" style="background: #D594D5">
+      <div id="tswsideproper">
+        <p> </p>
+        <div id="tswcssbuttons">
+          <p><br>
+          </p>
+          <p><br>
+            <ul=""> </ul=""></p>
+          <li><a href="index.html" style="background: #CBE3FF; color: red;">Home</a></li>
+          <li><a href="aboutme.html" style="background: #CBE3FF; color: purple;">About
+              Me</a></li>
+          <li><a href="education.html" style="background: #CBE3FF; color: blue;">Education</a></li>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

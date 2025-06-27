@@ -1,0 +1,107 @@
+body {
+    background-color:pink;
+}
+
+.myclass {
+    background-color:purple;
+}
+label {
+    background-color:blue;
+}
+
+/* --- Math Racer Game Styles --- */
+
+#game-section {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+#road {
+    width: 80%;
+    height: 60px;
+    background-color: #555;
+    border-top: 5px dashed yellow;
+    border-bottom: 5px dashed yellow;
+    margin: 20px auto;
+    position: relative; /* Needed for positioning the car */
+}
+
+#car {
+    font-size: 40px;
+    position: absolute;
+    left: 0; /* Start at the left */
+    bottom: 5px;
+    transform: scaleX(-1); /* Flips the car to face right */
+    transition: left 1s linear; /* Smooth movement animation */
+}
+
+#problem-area {
+    margin-top: 20px;
+    font-size: 1.5em;
+}
+
+#answer {
+    width: 100px;
+    padding: 5px;
+    font-size: 1em;
+}
+
+#submitBtn {
+    padding: 5px 15px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* --- Lyrics Finder Styles --- */
+
+#lyrics-section {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#lyrics-finder input {
+    padding: 5px;
+    font-size: 1em;
+    margin: 5px;
+}
+
+#lyricsContainer {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    white-space: pre-wrap; /* Ensures lyrics wrap and line breaks are respected */
+    text-align: left;
+    max-width: 80%;
+}
+
+/* --- K-Pop Guessing Game Styles --- */
+
+#kpop-game-section {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#lyric-snippet-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #e6e6fa; /* Lavender */
+    border: 2px dashed #9370db; /* Medium Purple */
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+#lyric-snippet {
+    font-size: 1.5em;
+    font-style: italic;
+    color: #333;
+}
+
+#kpop-guesser button, #kpop-guesser input {
+    padding: 5px 10px;
+    font-size: 1em;
+    margin: 5px;
+    cursor: pointer;
+}

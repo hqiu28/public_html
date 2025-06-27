@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1</title>
+    <link rel="stylesheet" href="intro.css">
+    <style>
+        .spinning-ball {
+            width: 150px;
+            height: 150px;
+            background-color: hotpink;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            font-family: sans-serif;
+            margin: 20px auto; /* Centers the ball and adds space around it */
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div>Welcome to Launch 2039</div>
+    <p class="myclass" id="mytext1">Welcome to JS!</p>
+    <p class="myclass" id="mytext2">Here are some more prargraphs</p>
+    <label>Background Color:</label>
+    <input type="text" id="myinput" placeholder="Enter your color: ">
+    <button onclick="myFunction()">Click Me</button>
+    <div class="spinning-ball">kpop is amazing</div>
+
+    <hr style="margin-top: 40px;">
+
+    <div id="game-section">
+        <h1>Math Racer</h1>
+        <p>Solve the math problem to move the car!</p>
+
+        <div id="game-container">
+            <div id="road">
+                <div id="car">🏎️</div>
+            </div>
+            <div id="problem-area">
+                <span id="problem"></span>
+                <input type="number" id="answer" placeholder="Your answer">
+                <button id="submitBtn">Go!</button>
+            </div>
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <hr style="margin-top: 40px;">
+
+    <div id="lyrics-section">
+        <h1>Find Song Lyrics</h1>
+        <p>Enter the artist and song title to find the lyrics.</p>
+        <div id="lyrics-finder">
+            <input type="text" id="artistName" placeholder="Artist Name">
+            <input type="text" id="songTitle" placeholder="Song Title">
+            <input type="text" id="dramaName" placeholder="Drama Name (Optional)">
+            <button id="findLyricsBtn">Find Lyrics</button>
+        </div>
+        <pre id="lyricsContainer"></pre>
+    </div>
+
+    <hr style="margin-top: 40px;">
+
+    <div id="kpop-game-section">
+        <h1>Guess the K-Pop Song!</h1>
+        <p>We'll give you the artist and a lyric. Can you guess the song title from the choices below?</p>
+        <div id="lyric-snippet-container">
+            <p id="lyric-snippet">Press "New Song" to start!</p>
+        </div>
+        <div id="kpop-guesser">
+            <div id="kpop-choices-container"></div>
+            <button id="newKpopSongBtn">New Song</button>
+        </div>
+        <div id="kpop-feedback"></div>
+    </div>
+
+    <script src="intro.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Education</title>
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta name="generator" content="thesitewizard.com's Layout Wizard 4.0.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="all" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="tswnavbar.css">
+    <style>
+    h2 {
+      color: #EA15A8;
+    }
+    body, #tswsidecol {
+      transition: background-color 1s ease-in-out;
+    }
+
+    /* Firework Container */
+    #fire-sparkle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Allows clicks to pass through */
+      z-index: 9999; /* Ensures fireworks are on top */
+      overflow: hidden; /* Hides fireworks outside the viewport */
+    }
+
+    /* Firework Particle styles */
+    .firework-particle {
+      position: absolute;
+      background-color: #FFD700; /* Gold for a bright center */
+      border-radius: 50%;
+      box-shadow: 0 0 8px #FF4500, 0 0 15px #FFA500, 0 0 25px #FFD700; /* Intense glow */
+      animation: firework-burst linear forwards;
+    }
+
+    @keyframes firework-burst {
+      0% { transform: translate(0, 0) scale(0); opacity: 1; }
+      100% { transform: translate(var(--x-offset), var(--y-offset)) scale(1); opacity: 0; }
+    }
+  </style>
+  </head>
+  <body style="   background:#D3FAFE">
+    <div id="tswcontainer">
+      <div id="tswheader" style="background: #C1C3E6">
+        <p><br>
+          <img src="images/All%20About%20Me.jpg" alt="Logo" title="All About Me"
+
+            style="width: 560px; height: 206px; display: block; margin: auto;">
+        </p>
+        <p>&nbsp;</p>
+        <div id="tswcontent" {="" style="background: #F5C0B8" }="">
+          <div id="tswcontproper">
+            <h1 style="color: purple; font-family: Times New Roman;">Extracurricular
+              <br>-------------------------</h1>
+            <img src="images/Helen%20Qiu.jpeg" alt="Helen Qiu" title="Helen" style="width: 811px; height: 1103px;"><br>
+            <h4>During high school, I have participated in many extracurricular
+              activities. I plan to continue to do all of these next year. <br>
+            </h4>
+            <h2><br>
+            </h2>
+            <h2>Orchestra</h2>
+            <h2>&nbsp;<img src="images/WYSO.png" alt="My Orchestra" title="WYSO"
+
+                style="width: 813px; height: 383px;"> </h2>
+            <h4>I have been a member of the Worcester Youth Orchestra for four
+              years. For the first two years, I was a first violin in the
+              Worcester Youth Philharmonic and Worcester Youth Baroque
+              Orchestra. Then I auditioned for the Symphony Orchestra and is now
+              a first violin member of the orchestra. Some works we have played
+              are Dvorak's Symphony No. 8, Lord of the Rings melody, Mahler's
+              Symphony No. 1, and Coleridge-Taylor's The Bamboula. Here is a
+              video of me playing!</h4>
+            <video controls> <source src="images/Helen%20Violin.MP4" preload="none"
+
+                height="500"> width="600"&gt;</video><br>
+            <h2>School Clubs<br>
+            </h2>
+          </div>
+          <img src="images/Chemistry.jpg" alt="Chemistry Club" title="Club" style="width: 938px; height: 1170px;">
+          <div><br>
+            <h4>During freshman, I participated in the Chemistry Club and Girls
+              Who Code Club. During April, I went to three elementary schools in
+              Shrewsbury to teach the kids about Chemistry. The station I was
+              responsible for is the elephant toothpaste. In Girls Who Code,
+              they just taught us how to code. </h4>
+            <p><br>
+            </p>
+            <h2>Projects: </h2>
+            <img src="images/WPI.png" alt="WPI" title="Project" style="width: 938px; height: 1249px;">
+            <h4>Here are the links to my projects!<br>
+              - <a href="https://users.wpi.edu/%7Ehqiu/project1/">Project 1</a></h4>
+            <h4>- <a href="https://users.wpi.edu/%7Enhuq/word%20fold/game.html">Word
+                Fold</a><br>
+            </h4>
+            <h3> Project 1: <br>
+              -------------- </h3>
+            <h4>Project 1 contains a few parts. There is a <br>
+            </h4>
+            <p><br>
+            </p>
+            <p><br>
+            </p>
+            <p> </p>
+            <h2 style="color: purple;">Contact Information: </h2>
+            <p>Email: hqiu@wpi.edu </p>
+            <p> I was born in Shanghai, China in 2009.<br>
+            </p>
+          </div>
+          <div style="clear: both;"></div>
+          <div id="tswfooter" style="background: #FDCAE8">
+            <p><br>
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <br> </p>
+            <h1><img src="images/Copyright.png" alt="Copyright logo" title="Copyright"
+
+                style="width: 51px; height: 29px;">&nbsp; All rights are
+              reserved </h1>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
+          <div style="background: #FDCAE8"><br>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1></h1>
+            <h1> </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tswsidecol" style="background: #D3FAFE">
+      <div id="tswsideproper">
+        <p> </p>
+        <div id="tswcssbuttons">
+          <p><br>
+          </p>
+          <p><br>
+            <ul=""> </ul=""></p>
+          <li><a href="index.html" style="background: #CBE3FF; color: red;">Home</a></li>
+          <li><a href="aboutme.html" style="background: #CBE3FF; color: purple;">About
+              Me</a></li>
+          <li><a href="education.html" style="background: #CBE3FF; color: blue;">Education</a></li>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Firework effect
+        let fireworkContainer = document.getElementById('fire-sparkle-container');
+        if (!fireworkContainer) {
+          fireworkContainer = document.createElement('div');
+          fireworkContainer.id = 'fire-sparkle-container';
+          document.body.appendChild(fireworkContainer);
+        }
+
+        function createFireworkBurst() {
+          // Random X position across the screen
+          const burstX = Math.random() * window.innerWidth;
+          // Random Y position in the upper half of the screen for bursts
+          const burstY = Math.random() * (window.innerHeight * 0.5) + (window.innerHeight * 0.1);
+
+          const numberOfParticles = 50; // Increased number of particles per burst for a fuller effect
+          const burstDuration = 2; // seconds for the burst animation
+
+          // Define color palettes for fireworks
+          const fireworkColorPalettes = [
+            { main: '#FFD700', glows: ['#FF4500', '#FFA500', '#FFD700'] }, // Gold/Orange
+            { main: '#00FFFF', glows: ['#00BFFF', '#1E90FF', '#00FFFF'] }, // Cyan/Blue
+            { main: '#FF00FF', glows: ['#EE82EE', '#DA70D6', '#FF00FF'] }, // Magenta/Purple
+            { main: '#ADFF2F', glows: ['#7CFC00', '#32CD32', '#ADFF2F'] },  // GreenYellow/Green
+            { main: '#FFFFFF', glows: ['#E0E0E0', '#C0C0C0', '#FFFFFF'] }, // White
+            { main: '#FF69B4', glows: ['#FF1493', '#FF69B4', '#FFC0CB'] }  // HotPink/Pink
+          ];
+
+          // Randomly select a color palette for this burst
+          const selectedPalette = fireworkColorPalettes[Math.floor(Math.random() * fireworkColorPalettes.length)];
+
+          for (let i = 0; i < numberOfParticles; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework-particle';
+
+            // Apply selected colors
+            particle.style.backgroundColor = selectedPalette.main;
+            particle.style.boxShadow = `0 0 8px ${selectedPalette.glows[0]}, 0 0 15px ${selectedPalette.glows[1]}, 0 0 25px ${selectedPalette.glows[2]}`;
+
+            const size = Math.random() * 4 + 2; // 2px to 6px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Set initial position of the particle to the burst origin
+            particle.style.left = `${burstX}px`;
+            particle.style.top = `${burstY}px`;
+
+            // Calculate radial movement for each particle
+            const angle = Math.random() * Math.PI * 2; // 0 to 2PI radians
+            const distance = Math.random() * 120 + 50; // 50px to 170px outward movement
+            const xOffset = Math.cos(angle) * distance;
+            const yOffset = Math.sin(angle) * distance;
+
+            particle.style.setProperty('--x-offset', `${xOffset}px`);
+            particle.style.setProperty('--y-offset', `${yOffset}px`);
+
+            // Randomize animation duration and delay slightly for a more natural look
+            particle.style.animationDuration = `${burstDuration + (Math.random() * 0.5 - 0.25)}s`;
+            particle.style.animationDelay = `${Math.random() * 0.2}s`;
+
+            fireworkContainer.appendChild(particle);
+
+            // Remove particle after animation finishes to clean up DOM
+            setTimeout(() => {
+              particle.remove();
+            }, (parseFloat(particle.style.animationDuration) + parseFloat(particle.style.animationDelay)) * 1000);
+          }
+        }
+
+        // Function to trigger bursts at random intervals
+        function launchFireworks() {
+            createFireworkBurst();
+            // Set a timeout for the next burst with a new random delay
+            setTimeout(launchFireworks, Math.random() * 1000 + 1000); // Every 1-2 seconds
+        }
+
+        // Start the firework show
+        launchFireworks();
+        const colors = ['#D3FAFE', '#C1C3E6', '#F5C0B8', '#FDCAE8', '#CBE3FF'];
+        const sidecol = document.getElementById('tswsidecol');
+        let colorIndex = 0;
+
+        setInterval(() => {
+          colorIndex = (colorIndex + 1) % colors.length;
+          const newColor = colors[colorIndex];
+          document.body.style.backgroundColor = newColor;
+          if (sidecol) {
+            sidecol.style.backgroundColor = newColor;
+          }
+        }, 2000); // Switch color every 2 seconds
+      });
+    </script>
+  </body>
+</html>
