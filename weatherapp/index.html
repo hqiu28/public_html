@@ -9,8 +9,7 @@
 </head>
 <body>    <div id="dev-controls">
         <div class="controls">
-            <input id="city-input" type="text" placeholder="City (e.g., London)" value="" style="width: 120px; margin-right: 5px;">
-            <input id="country-input" type="text" placeholder="Country (e.g., UK)" value="" style="width: 100px; margin-right: 10px;">
+            <input id="location-input" type="text" placeholder="Enter city name (e.g., Worcester, Boston, London)" value="Worcester" style="width: 200px; margin-right: 10px;">
             <button onclick="getLocation()">LOAD LOCATION</button>
             <button onclick="getWeather()">LOAD WEATHER</button>
             <button onclick="getForecast()">LOAD FORECAST</button>
@@ -33,7 +32,7 @@
                 <input id="api-key-input" type="password" placeholder="Enter your Gemini API key" onkeypress="handleApiKeyPress(event)">
                 <button id="toggle-api-key" onclick="toggleApiKeyVisibility()" title="Show/Hide API Key">👁️</button>
             </div>
-            <button onclick="initializeChatbot()">Connect Chatbot</button>
+            <button onclick="initializeChatbot(document.getElementById('api-key-input').value)">Connect Chatbot</button>
         </div>
         
         <div id="chat-container">

@@ -28,11 +28,6 @@ function displayLocation() {
 
 function displayWeather() {
     const weatherReport = document.getElementById("weather-report");
-    if (!omWeather.json || !omWeather.json.weather || omWeather.json.weather.length === 0 || !omWeather.json.main) {
-        weatherReport.innerHTML = "Weather data not available.";
-        console.error("Weather data is incomplete or missing:", omWeather.json);
-        return;
-    }
 
     // Weather Condition Strings
     let cond = omWeather.json.weather[0].main;
@@ -82,11 +77,6 @@ function getWeatherEmoji(condition) {
 
 function displayForecast() {
     var table = document.getElementById('forecast-table');
-    if (!omForecast.json || !omForecast.json.list || omForecast.json.list.length === 0) {
-        table.innerHTML = '<tr><th>Forecast data not available.</th></tr>';
-        console.error("Forecast data is incomplete or missing:", omForecast.json);
-        return;
-    }
     table.innerHTML = '';
 
     const headerColText = ["Time", "Temperature", "Condition", "Humidity", "Icon"];
@@ -144,11 +134,6 @@ function createRow(json) {
 
 function displayPollution() {
     const pollutionReport = document.getElementById("pollution-report");
-    if (!omPollution.json || !omPollution.json.list || omPollution.json.list.length === 0 || !omPollution.json.list[0].main || !omPollution.json.list[0].components) {
-        pollutionReport.innerHTML = "Pollution data not available.";
-        console.error("Pollution data is incomplete or missing:", omPollution.json);
-        return;
-    }
 
     // Weather Condition Strings
     let aqi = parseInt(omPollution.json.list[0].main.aqi);

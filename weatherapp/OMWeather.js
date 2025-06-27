@@ -6,60 +6,42 @@ class OMWeather {
         this.json = null;
     }
 
-    request() {
-        return new Promise((resolve, reject) => {
-            // Check if forecast data already contains current weather to avoid a redundant API call
-            if (omForecast && omForecast.json && omForecast.json._currentWeather) {
-                this.json = omForecast.json._currentWeather;
-                console.log("Using cached current weather from forecast call.");
-                resolve();
+    request(callback) {
+        var xhttp = new XMLHttpRequest();
+        let self = this;
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState != 4) return;
+            if (this.status != 200) {
+                alert(`Payload bad (code ${this.status})`);
                 return;
             }
-
-            var xhttp = new XMLHttpRequest();
-            let self = this;
-
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4) {
-                    if (this.status === 200) {
-                        try {
-                            let data = JSON.parse(this.responseText);
-                            // Convert Open-Meteo format to OWM-like format for compatibility
-                            self.json = self.convertToOWMFormat(data);
-                            resolve(); // Resolve the promise on success
-                        } catch (error) {
-                            console.error('Error parsing weather response:', error);
-                            reject(new Error('Error processing weather data.'));
-                        }
-                    } else {
-                        console.error(`Weather API error: ${this.status} - ${this.statusText}`);
-                        reject(new Error(`Failed to fetch weather data. Error ${this.status}.`));
-                    }
-                }
+            let data = JSON.parse(this.responseText);
+            // Convert Open-Meteo format to OWM-like format for compatibility
+            self.json = self.convertToOWMFormat(data);
+            if (callback !== undefined) {
+                callback();
             }
-            
-            let tempUnit = self.units === "imperial" ? "fahrenheit" : "celsius";
-            let windSpeedUnit = self.units === "imperial" ? "mph" : "kmh";
-            
-            let URL = `https://api.open-meteo.com/v1/forecast?latitude=${self.lat}&longitude=${self.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=${tempUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&timezone=auto`;
-            
-            xhttp.open("GET", URL, true);
-            xhttp.send();
-        });
+        }
+        
+        let tempUnit = this.units === "imperial" ? "fahrenheit" : "celsius";
+        let windSpeedUnit = this.units === "imperial" ? "mph" : "kmh";
+        
+        let URL = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=${tempUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&timezone=auto`;
+        
+        xhttp.open("GET", URL, true);
+        xhttp.send();
     }
 
-    testRequest(num) {
-        return new Promise((resolve, reject) => {
-            let self = this;
-            fetch(`./testjson/weather${num}.json`)
-                .then(response => response.json())
-                .then(data => {
-                    self.json = data; // Keep OWM format for testing
-                    resolve();
-                })
-                .catch(error => {
-                    reject(new Error(`Error loading test weather data: ${error.message}`));
-                });
+    testRequest(num, callback) {
+        let self = this;
+        fetch(`./testjson/weather${num}.json`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                self.json = data; // Keep OWM format for testing
+                callback();
             });
     }
 
@@ -130,11 +112,5 @@ class OMWeather {
             timezone: 0,
             name: "Current Location"
         };
-    }
-    getTemperature() {
-        if (this.json && this.json.main) {
-            return this.json.main.temp;
-        }
-        return null;
     }
 }

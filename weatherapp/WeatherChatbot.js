@@ -1,235 +1,244 @@
-// z:\public_html\weatherapp\WeatherChatbot.js
+class WeatherChatbot {
+    constructor(apiKey) {
+        this.apiKey = apiKey;
+        // Updated to use the correct Gemini API endpoint
+        this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+    }
 
-let chatbotInitialized = false;
-let chatHistory = []; // To store conversation context (for future advanced use)
-let conversationState = 'awaiting_location'; // Initial state: 'awaiting_location', 'awaiting_country', 'ready_for_query'
-let lastCityAsked = ''; // To store the city when the bot is awaiting the country
-let hasMapLoaded = false; // To track if the map has been initialized
+    async sendMessage(userMessage, weatherData = null) {
+        try {
+            // Create context about current weather if available
+            let context = "You are a helpful weather assistant. ";
+            
+            if (weatherData) {
+                const location = weatherData.location || "the current location";
+                const weather = weatherData.weather;
+                const forecast = weatherData.forecast;
+                const pollution = weatherData.pollution;
 
-// Helper function to append messages to the chat interface
-function appendMessage(sender, message, mapUrl = null) {
-    const chatMessages = document.getElementById('chat-messages');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `chat-message ${sender}`;
-    msgDiv.innerHTML = `<strong>${sender === 'bot' ? 'Bot' : 'You'}:</strong> ${message}`;
-    chatMessages.appendChild(msgDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+                context += `Current weather information for ${location}:\n`;
+                
+                if (weather) {
+                    context += `- Current temperature: ${weather.main.temp}°F\n`;
+                    context += `- Feels like: ${weather.main.feels_like}°F\n`;
+                    context += `- Condition: ${weather.weather[0].description}\n`;
+                    context += `- Humidity: ${weather.main.humidity}%\n`;
+                    context += `- Wind speed: ${weather.wind.speed} mph\n`;
+                }
+                
+                if (pollution) {
+                    context += `- Air Quality Index: ${pollution.list[0].main.aqi}/5\n`;
+                }
 
-    // If a map URL is provided, display the map
-    if (mapUrl) {
-        const mapDiv = document.createElement('div');
-        mapDiv.innerHTML = `<img src="${mapUrl}" alt="Map of Location" style="max-width:100%; height:auto;">`;
-        chatMessages.appendChild(mapDiv);
+                context += "\nUse this information to answer weather-related questions. Be friendly and helpful. Keep responses concise and conversational.";
+            } else {
+                context += "The user hasn't loaded weather data yet. Suggest they load location and weather data first to get specific information.";
+            }
+
+            const prompt = `${context}\n\nUser question: ${userMessage}`;
+
+            console.log('Making request to:', `${this.baseUrl}?key=${this.apiKey.substring(0, 10)}...`);
+
+            const response = await fetch(`${this.baseUrl}?key=${this.apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 1024,
+                    }
+                })
+            });
+
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                
+                if (response.status === 400) {
+                    throw new Error('Invalid API key or request format. Please check your Gemini API key.');
+                } else if (response.status === 403) {
+                    throw new Error('API key access denied. Make sure your key has the correct permissions.');
+                } else if (response.status === 404) {
+                    throw new Error('API endpoint not found. The Gemini API might have changed.');
+                } else {
+                    throw new Error(`Gemini API error: ${response.status} - ${response.statusText}`);
+                }
+            }
+
+            const data = await response.json();
+            console.log('API Response:', data);
+            
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                return data.candidates[0].content.parts[0].text;
+            } else if (data.error) {
+                throw new Error(`Gemini API Error: ${data.error.message}`);
+            } else {
+                throw new Error('No valid response from Gemini API');
+            }
+
+        } catch (error) {
+            console.error('Chatbot error:', error);
+            return `Sorry, I'm having trouble right now. ${error.message}`;
+        }
+    }
+
+    getCurrentWeatherData() {
+        // Gather current weather data from the global objects
+        const weatherData = {};
+        
+        try {
+            // Get location name
+            if (typeof omGeocode !== 'undefined' && omGeocode.json) {
+                weatherData.location = omGeocode.getName();
+            }
+
+            // Get current weather
+            if (typeof omWeather !== 'undefined' && omWeather.json) {
+                weatherData.weather = omWeather.json;
+            }
+
+            // Get forecast data
+            if (typeof omForecast !== 'undefined' && omForecast.json) {
+                weatherData.forecast = omForecast.json;
+            }
+
+            // Get pollution data
+            if (typeof omPollution !== 'undefined' && omPollution.json) {
+                weatherData.pollution = omPollution.json;
+            }
+
+            return Object.keys(weatherData).length > 0 ? weatherData : null;
+        } catch (error) {
+            console.error('Error gathering weather data:', error);
+            return null;
+        }
     }
 }
 
-// Helper function to parse city and country from a string
-function parseLocationInput(input) {
-    // Simple parsing: look for comma, assume City, Country
-    const parts = input.split(',').map(s => s.trim());
-    let city = '';
-    let country = '';
+// Global chatbot instance (will be initialized when API key is provided)
+let weatherChatbot = null;
 
-    if (parts.length === 2) {
-        city = parts[0];
-        country = parts[1];
-    } else if (parts.length === 1) {
-        city = parts[0];
-    }
-    return { city, country };
-}
-
-// Initialize the chatbot
-function initializeChatbot() {
-    chatbotInitialized = true;
-    if (document.getElementById('api-key-section')) { // Check if the element exists
-      document.getElementById('api-key-section').style.display = 'none';
+// Initialize chatbot with API key
+function initializeChatbot(apiKey) {
+    if (!apiKey || apiKey.trim() === '') {
+        alert('Please enter a valid Gemini API key');
+        return false;
     }
     
+    weatherChatbot = new WeatherChatbot(apiKey.trim());
     document.getElementById('chat-input').disabled = false;
     document.getElementById('send-btn').disabled = false;
-    appendMessage('bot', 'Hello! I am your Weather Chat Assistant. What city and country would you like to know the weather for? (e.g., London, UK)');
-    conversationState = 'awaiting_location';
+    document.getElementById('api-key-input').style.backgroundColor = '#d4edda';
+    
+    addChatMessage('Chatbot', 'Hi! I\'m your weather assistant. Ask me anything about the weather!', 'bot');
+    return true;
 }
 
-// Send a message from the user to the chatbot
+// Add message to chat display
+function addChatMessage(sender, message, type) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${type}`;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    messageDiv.innerHTML = `
+        <div class="message-header">
+            <strong>${sender}</strong>
+            <span class="timestamp">${timestamp}</span>
+        </div>
+        <div class="message-content">${message.replace(/\n/g, '<br>')}</div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Send user message to chatbot
 async function sendChatMessage() {
     const chatInput = document.getElementById('chat-input');
     const userMessage = chatInput.value.trim();
+    
     if (!userMessage) return;
+    
+    if (!weatherChatbot) {
+        alert('Please enter your Gemini API key first');
+        return;
+    }
 
-    appendMessage('user', userMessage);
+    // Add user message to chat
+    addChatMessage('You', userMessage, 'user');
     chatInput.value = '';
 
-    let fullLocation = '';
+    // Show typing indicator
+    addChatMessage('Chatbot', 'Typing...', 'bot typing');
 
-    switch (conversationState) {
-        case 'awaiting_location':
-            const { city, country } = parseLocationInput(userMessage);
-            if (city && country) {
-                fullLocation = `${city}, ${country}`;
-                appendMessage('bot', `Okay, getting weather for ${fullLocation}...`);
-                // Set the separate city and country input field values
-                document.getElementById('city-input').value = city;
-                document.getElementById('country-input').value = country;
-
-                // Assuming these functions are globally available from other scripts
-                try {
-                    await getLocation(); // getLocation must complete first to get lat/lon
-                    // Fetch forecast (which now includes current) and pollution in parallel.
-                    await Promise.all([
-                        getForecast(),
-                        getPollution()
-                    ]);
-                    // Now call getWeather. It will be a fast, non-network operation
-                    // that uses the data fetched by getForecast.
-                    await getWeather();
-                } catch (error) {
-                    console.error("Error fetching weather data:", error);
-                    appendMessage('bot', `Sorry, I couldn't get the weather for ${fullLocation}. Error: ${error.message}. Please check the location or try again later.`);
-                    return; // Stop further processing if there's an error
-                }
-
-                // Generate and display a map for the location
-                const mapUrl = generateMapUrl(omGeocode.getLat(), omGeocode.getLon());
-                if (mapUrl) {
-                    appendMessage('bot', `Here is the weather information for ${fullLocation}.`, mapUrl);
-                } else {
-                    appendMessage('bot', `Here is the weather information for ${fullLocation}.`);
-                }
-
-                appendMessage('bot', `Here is the weather information for ${fullLocation}. What else can I help you with?`);
-                conversationState = 'ready_for_query';
-            } else if (city) {
-                lastCityAsked = city;
-                appendMessage('bot', `You mentioned "${city}". What country is that in?`);
-                conversationState = 'awaiting_country';
-            } else {
-                appendMessage('bot', 'I need a city and country to get weather information. Please tell me both, like "Paris, France".');
-            }
-            break;
-
-        case 'awaiting_country':
-            const countryInput = userMessage;
-            if (lastCityAsked && countryInput) {
-                fullLocation = `${lastCityAsked}, ${countryInput}`;
-                appendMessage('bot', `Okay, getting weather for ${fullLocation}...`);
-                document.getElementById('city-input').value = lastCityAsked;
-                document.getElementById('country-input').value = countryInput;
-                try {
-                    await getLocation();
-                    // Fetch forecast (which now includes current) and pollution in parallel.
-                    await Promise.all([
-                        getForecast(),
-                        getPollution()
-                    ]);
-                    // Now call getWeather. It will be a fast, non-network operation
-                    // that uses the data fetched by getForecast.
-                    await getWeather();
-                } catch (error) {
-                    console.error("Error fetching weather data:", error);
-                    appendMessage('bot', `Sorry, I couldn't get the weather for ${fullLocation}. Error: ${error.message}. Please check the location or try again later.`);
-                    return;
-                }
-
-                // Generate and display a map for the location
-                const mapUrl = generateMapUrl(omGeocode.getLat(), omGeocode.getLon());
-                if (mapUrl) {
-                    appendMessage('bot', `Here is the weather information for ${fullLocation}.`, mapUrl);
-                } else {
-                    appendMessage('bot', `Here is the weather information for ${fullLocation}.`);
-                }
-
-                conversationState = 'ready_for_query';
-
-                lastCityAsked = ''; // Clear stored city
-            } else {
-                appendMessage('bot', 'Please provide the country for the city you mentioned.');
-                conversationState = 'awaiting_location'; // Reset if context is lost
-            }
-            break;
-
-        case 'ready_for_query':
-            // This case can be expanded for more complex natural language processing using Gemini API
-            if (userMessage.toLowerCase().includes('weather in') || userMessage.toLowerCase().includes('forecast for')) {
-                const locationMatch = userMessage.match(/(weather in|forecast for)\s+(.+)/i);
-                if (locationMatch && locationMatch[2]) {
-                    const newLocation = locationMatch[2].trim();
-                    const { city, country } = parseLocationInput(newLocation);
-                    if (city && country) {
-                        fullLocation = `${city}, ${country}`;
-                        appendMessage('bot', `Okay, getting weather for ${fullLocation}...`);
-                        document.getElementById('city-input').value = city;
-                        document.getElementById('country-input').value = country;
-                        try {
-                            await getLocation();
-                            // Fetch forecast (which now includes current) and pollution in parallel.
-                            await Promise.all([
-                                getForecast(),
-                                getPollution()
-                            ]);
-                            // Now call getWeather. It will be a fast, non-network operation
-                            // that uses the data fetched by getForecast.
-                            await getWeather();
-                        } catch (error) {
-                            console.error("Error fetching weather data:", error);
-                            appendMessage('bot', `Sorry, I couldn't get the weather for ${fullLocation}. Error: ${error.message}. Please check the location or try again later.`);
-                            return;
-                        }
-
-                        appendMessage('bot', `Here is the weather information for ${fullLocation}. What else can I help you with?`);
-                        // Generate and display a map for the location
-                        const mapUrl = generateMapUrl(omGeocode.getLat(), omGeocode.getLon());
-                        if (mapUrl) {
-                            appendMessage('bot', `Here is the weather information for ${fullLocation}.`, mapUrl);
-                        } else {
-                            appendMessage('bot', `Here is the weather information for ${fullLocation}.`);
-                        }
-                        conversationState = 'ready_for_query';
-                    } 
-                    else if (city) {
-                        lastCityAsked = city;
-
-                        appendMessage('bot', `You mentioned "${city}". What country is that in?`);
-                        conversationState = 'awaiting_country';
-                    } else {
-                        appendMessage('bot', 'Please specify a city and country for the weather query.');
-                    }
-                } else {
-                    appendMessage('bot', 'I can help with weather. Please ask about a specific city and country.');
-                }
-            } else if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
-                appendMessage('bot', 'Hello there! How can I assist you with weather information today? You can ask something like: What is the weather in London, UK');
-            } else {
-                appendMessage('bot', 'I am a weather assistant. You can ask me about the weather or forecast for a city and country.');
-            }
-            break;
-
-        default:
-            appendMessage('bot', 'An unexpected error occurred. Please refresh the page.');
-            conversationState = 'awaiting_location';
-            break;
+    try {
+        // Get current weather data
+        const weatherData = weatherChatbot.getCurrentWeatherData();
+        
+        // Send to Gemini
+        const response = await weatherChatbot.sendMessage(userMessage, weatherData);
+        
+        // Remove typing indicator
+        const chatMessages = document.getElementById('chat-messages');
+        const lastMessage = chatMessages.lastElementChild;
+        if (lastMessage && lastMessage.classList.contains('typing')) {
+            lastMessage.remove();
+        }
+        
+        // Add bot response
+        addChatMessage('Chatbot', response, 'bot');
+        
+    } catch (error) {
+        // Remove typing indicator
+        const chatMessages = document.getElementById('chat-messages');
+        const lastMessage = chatMessages.lastElementChild;
+        if (lastMessage && lastMessage.classList.contains('typing')) {
+            lastMessage.remove();
+        }
+        
+        addChatMessage('Chatbot', 'Sorry, I encountered an error. Please try again.', 'bot error');
     }
 }
 
-// Event listener for Enter key in chat input
+// Handle Enter key in chat input
 function handleChatKeyPress(event) {
     if (event.key === 'Enter') {
         sendChatMessage();
     }
 }
 
-// Helper function to generate a static map URL (using Mapbox as an example)
-function generateMapUrl(latitude, longitude) {
-    if (!latitude || !longitude) return null;
-    // Replace with your actual Mapbox Access Token
-    const accessToken = 'pk.eyJ1IjoiaGVsZW5xaXUiLCJhIjoiY2x1b3U3ZjkyMDF3dzJqcnduN3l6b2Z2dCJ9.rRlJ8IEj38Gj34cTqIZcKA'; 
-    const zoomLevel = 10;
-    return `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoomLevel},0,0/600x300?access_token=${accessToken}`;
+// Handle Enter key in API key input
+function handleApiKeyPress(event) {
+    if (event.key === 'Enter') {
+        const apiKey = document.getElementById('api-key-input').value;
+        initializeChatbot(apiKey);
+    }
 }
 
-
-// Expose functions to global scope as they are called directly from HTML
-window.initializeChatbot = initializeChatbot;
-window.sendChatMessage = sendChatMessage;
-window.handleChatKeyPress = handleChatKeyPress;
+// Toggle API key visibility
+function toggleApiKeyVisibility() {
+    const apiKeyInput = document.getElementById('api-key-input');
+    const toggleButton = document.getElementById('toggle-api-key');
+    
+    if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        toggleButton.innerHTML = '🙈'; // Hide icon
+        toggleButton.title = 'Hide API Key';
+    } else {
+        apiKeyInput.type = 'password';
+        toggleButton.innerHTML = '👁️'; // Show icon
+        toggleButton.title = 'Show API Key';
+    }
+}

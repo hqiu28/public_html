@@ -5,49 +5,39 @@ class OMPollution {
         this.json = null;
     }
 
-    request() {
-        return new Promise((resolve, reject) => {
-            var xhttp = new XMLHttpRequest();
-            let self = this;
+    request(callback) {
+        var xhttp = new XMLHttpRequest();
+        let self = this;
 
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4) {
-                    if (this.status === 200) {
-                        try {
-                            let data = JSON.parse(this.responseText);
-                            // Convert Open-Meteo format to OWM-like format for compatibility
-                            self.json = self.convertToOWMFormat(data);
-                            resolve();
-                        } catch (error) {
-                            console.error('Error parsing pollution response:', error);
-                            reject(new Error('Error processing pollution data.'));
-                        }
-                    } else {
-                        console.error(`Pollution API error: ${this.status} - ${this.statusText}`);
-                        reject(new Error(`Failed to fetch pollution data. Error ${this.status}.`));
-                    }
-                }
+        xhttp.onreadystatechange = function() {
+            if (this.readyState != 4) return;
+            if (this.status != 200) {
+                alert(`Payload bad (code ${this.status})`);
+                return;
             }
-            
-            let URL = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${self.lat}&longitude=${self.lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=auto`;
-            
-            xhttp.open("GET", URL, true);
-            xhttp.send();
-        });
+            let data = JSON.parse(this.responseText);
+            // Convert Open-Meteo format to OWM-like format for compatibility
+            self.json = self.convertToOWMFormat(data);
+            if (callback !== undefined) {
+                callback();
+            }
+        }
+        
+        let URL = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${this.lat}&longitude=${this.lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=auto`;
+        
+        xhttp.open("GET", URL, true);
+        xhttp.send();
     }
 
-    testRequest(num) {
-        return new Promise((resolve, reject) => {
-            let self = this;
-            fetch(`./testjson/pollution${num}.json`)
-                .then(response => response.json())
-                .then(data => {
-                    self.json = data; // Keep OWM format for testing
-                    resolve();
-                })
-                .catch(error => {
-                    reject(new Error(`Error loading test pollution data: ${error.message}`));
-                });
+    testRequest(num, callback) {
+        let self = this;
+        fetch(`./testjson/pollution${num}.json`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                self.json = data; // Keep OWM format for testing
+                callback();
             });
     }
 

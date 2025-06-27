@@ -7,54 +7,42 @@ class OMForecast {
         this.json = null;
     }
 
-    request() {
-        return new Promise((resolve, reject) => {
-            var xhttp = new XMLHttpRequest();
-            let self = this;
+    request(callback) {
+        var xhttp = new XMLHttpRequest();
+        let self = this;
 
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4) {
-                    if (this.status === 200) {
-                        try {
-                            let data = JSON.parse(this.responseText);
-                            // Convert Open-Meteo format to OWM-like format for compatibility
-                            self.json = self.convertToOWMFormat(data);
-                            resolve();
-                        } catch (error) {
-                            console.error('Error parsing forecast response:', error);
-                            reject(new Error('Error processing forecast data.'));
-                        }
-                    } else {
-                        console.error(`Forecast API error: ${this.status} - ${this.statusText}`);
-                        reject(new Error(`Failed to fetch forecast data. Error ${this.status}.`));
-                    }
-                }
+        xhttp.onreadystatechange = function() {
+            if (this.readyState != 4) return;
+            if (this.status != 200) {
+                alert(`Payload bad (code ${this.status})`);
+                return;
             }
-            
-            let tempUnit = self.units === "imperial" ? "fahrenheit" : "celsius";
-            let windSpeedUnit = self.units === "imperial" ? "mph" : "kmh";
-            // Also fetch current weather to combine API calls
-            const currentParams = "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m";
-            
-            let URL = `https://api.open-meteo.com/v1/forecast?latitude=${self.lat}&longitude=${self.lon}&current=${currentParams}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=${tempUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&timezone=auto&forecast_days=3`;
-            
-            xhttp.open("GET", URL, true);
-            xhttp.send();
-        });
+            let data = JSON.parse(this.responseText);
+            // Convert Open-Meteo format to OWM-like format for compatibility
+            self.json = self.convertToOWMFormat(data);
+            if (callback !== undefined) {
+                callback();
+            }
+        }
+        
+        let tempUnit = this.units === "imperial" ? "fahrenheit" : "celsius";
+        let windSpeedUnit = this.units === "imperial" ? "mph" : "kmh";
+        
+        let URL = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=${tempUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&timezone=auto&forecast_days=3`;
+        
+        xhttp.open("GET", URL, true);
+        xhttp.send();
     }
 
-    testRequest(num) {
-        return new Promise((resolve, reject) => {
-            let self = this;
-            fetch(`./testjson/forecast${num}.json`)
-                .then(response => response.json())
-                .then(data => {
-                    self.json = data; // Keep OWM format for testing
-                    resolve();
-                })
-                .catch(error => {
-                    reject(new Error(`Error loading test forecast data: ${error.message}`));
-                });
+    testRequest(num, callback) {
+        let self = this;
+        fetch(`./testjson/forecast${num}.json`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                self.json = data; // Keep OWM format for testing
+                callback();
             });
     }
 
@@ -78,40 +66,6 @@ class OMForecast {
             82: { main: "Rain", description: "violent rain showers", icon: "09d" },
             95: { main: "Thunderstorm", description: "thunderstorm", icon: "11d" }
         };
-
-        // --- Process current weather and store it in a format OMWeather can use ---
-        let currentWeatherOWM = null;
-        if (omData.current) {
-            const current = omData.current;
-            const weatherCode = current.weather_code || 0;
-            const weather = weatherCodeMap[weatherCode] || weatherCodeMap[0];
-
-            // Adjust icon for day/night
-            if (current.is_day === 0 && weather.icon.includes("d")) {
-                weather.icon = weather.icon.replace("d", "n");
-            }
-
-            currentWeatherOWM = {
-                coord: { lat: this.lat, lon: this.lon },
-                weather: [{ id: weatherCode, main: weather.main, description: weather.description, icon: weather.icon }],
-                main: {
-                    temp: current.temperature_2m,
-                    feels_like: current.apparent_temperature,
-                    temp_min: current.temperature_2m,
-                    temp_max: current.temperature_2m,
-                    pressure: current.pressure_msl || current.surface_pressure,
-                    humidity: current.relative_humidity_2m
-                },
-                visibility: 10000,
-                wind: { speed: current.wind_speed_10m, deg: current.wind_direction_10m, gust: current.wind_gusts_10m },
-                clouds: { all: current.cloud_cover },
-                dt: Math.floor(new Date(omData.current.time).getTime() / 1000),
-                sys: { country: "Unknown", sunrise: 0, sunset: 0 },
-                timezone: 0,
-                name: "Current Location"
-            };
-        }
-
 
         const hourly = omData.hourly;
         const list = [];
@@ -169,9 +123,8 @@ class OMForecast {
                     lat: this.lat,
                     lon: this.lon
                 },
-                country: "Unknown" // This info is in geocode, not weather/forecast
-            },
-            _currentWeather: currentWeatherOWM // Attach for OMWeather to use
+                country: "Unknown"
+            }
         };
     }
 
