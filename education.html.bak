@@ -41,16 +41,62 @@
       0% { transform: translate(0, 0) scale(0); opacity: 1; }
       100% { transform: translate(var(--x-offset), var(--y-offset)) scale(1); opacity: 0; }
     }
+
+    /* Styles for the new Biology Game */
+    #bio-answers button {
+        display: block;
+        margin: 5px 0;
+        padding: 10px;
+        width: 100%;
+        max-width: 400px;
+        cursor: pointer;
+    }
+
+    /* Styles for the new Math Game */
+    #math-game-container input {
+        padding: 8px;
+        margin-right: 5px;
+    }
+    #math-game-container button {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    /* Navigation button styles */
+    #tswcssbuttons li a {
+      border-radius: 15px; /* Rounded corners */
+      transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+    }
+
+    #tswcssbuttons li a:hover {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.9); /* White glow effect */
+      transform: scale(1.05); /* Slightly enlarge the button */
+    }
+
+    /* Logo styles */
+    #main-logo {
+      width: 560px;
+      height: 206px;
+      display: block;
+      margin: auto;
+      border-radius: 20px; /* Rounded corners for a softer look */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.25); /* A nice shadow for depth */
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transitions */
+    }
+
+    #main-logo:hover {
+      transform: scale(1.03) translateY(-5px); /* Grow and lift on hover */
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.3); /* A more pronounced shadow on hover */
+    }
   </style>
   </head>
-  <body style="   background:#D3FAFE">
+  <body style="         background:#D3FAFE">
     <div id="tswcontainer">
       <div id="tswheader" style="background: #C1C3E6">
         <p><br>
           <img src="images/All%20About%20Me.jpg" alt="Logo" title="All About Me"
 
-            style="width: 560px; height: 206px; display: block; margin: auto;">
-        </p>
+            id="main-logo"> </p>
         <p>&nbsp;</p>
         <div id="tswcontent" {="" style="background: #F5C0B8" }="">
           <div id="tswcontproper">
@@ -74,19 +120,50 @@
               are Dvorak's Symphony No. 8, Lord of the Rings melody, Mahler's
               Symphony No. 1, and Coleridge-Taylor's The Bamboula. Here is a
               video of me playing!</h4>
-            <video controls> <source src="images/Helen%20Violin.MP4" preload="none"
+            <video controls="controls"> <source src="images/Helen%20Violin.MP4"
 
-                height="500"> width="600"&gt;</video><br>
+                preload="none" height="500"> width="600"&gt;</video><br>
             <h2>School Clubs<br>
             </h2>
           </div>
           <img src="images/Chemistry.jpg" alt="Chemistry Club" title="Club" style="width: 938px; height: 1170px;">
           <div><br>
             <h4>During freshman, I participated in the Chemistry Club and Girls
-              Who Code Club. During April, I went to three elementary schools in
+              Who Code Club. In Chemistry Club, we did many fun experiments.
+              During the year we did marbling, baking a cake, making golden
+              pennies, etc. In the club, we were also playing with fire (safely
+              of course). During April, I went to three elementary schools in
               Shrewsbury to teach the kids about Chemistry. The station I was
               responsible for is the elephant toothpaste. In Girls Who Code,
               they just taught us how to code. </h4>
+            <p><br>
+            </p>
+            <h2>Spanish Conjugation Game: </h2>
+            <div id="spanish-game-container">
+              <p>Conjugate: <span id="game-verb"></span> (<span id="game-pronoun"></span>)</p>
+              <input id="game-answer" placeholder="Your answer" type="text"> <button
+
+                onclick="checkConjugation()">Check Answer</button>
+              <p id="game-feedback"></p>
+              <button onclick="newQuestion()">New Question</button> </div>
+            <p><br>
+            </p>
+            <h2>Biology Practice Game:</h2>
+            <div id="biology-game-container">
+              <p id="bio-question"></p>
+              <div id="bio-answers">
+                <!-- Answer buttons will be generated here --> </div>
+              <p id="bio-feedback"></p>
+              <button onclick="newBioQuestion()">Next Question</button> </div>
+            <p><br>
+            </p>
+            <h2>Algebra &amp; Geometry Challenge:</h2>
+            <div id="math-game-container">
+              <p id="math-question"></p>
+              <input id="math-answer" placeholder="Enter your answer" type="text">
+              <button onclick="checkMathAnswer()">Submit Answer</button>
+              <p id="math-feedback"></p>
+              <button onclick="newMathQuestion()">Next Question</button> </div>
             <p><br>
             </p>
             <h2>Projects: </h2>
@@ -96,12 +173,36 @@
             <h4>- <a href="https://users.wpi.edu/%7Enhuq/word%20fold/game.html">Word
                 Fold</a><br>
             </h4>
+            <h4>- <a href="https://users.wpi.edu/%7Ehqiu/weatherapp/">Weather
+                App</a> </h4>
             <h3> Project 1: <br>
               -------------- </h3>
-            <h4>Project 1 contains a few parts. There is a <br>
+            <h4>Project 1 contains a few parts. There is a text box that changes
+              to a different color every two second. The color is random. It
+              gives off a shinning affect when it changes from a dark to a light
+              color. We can also change the background color and when you click
+              the "click me button", it would say "you did it" and "this is my
+              script". On the website, there is also a spinning ball that says
+              "kpop is amazing". Under that section, we have a section that can
+              help you with your math skills. Although it os basic math, it can
+              help you with your speed and help you review your basics. If you
+              get the questions right, the car will move forward a little bit.
+              The next section helps you find the lyrics of your favorite song.
+              If you give the song title, artist, and drama (optional), it would
+              give you your lyrics! The last section is a fun kpop song guessing
+              game (girl group edition). <br>
             </h4>
-            <p><br>
-            </p>
+            <h3>Word Fold<br>
+              ------------------ </h3>
+            <h4>This is a fun game that me, Nashmia, and Ammarah modified. To
+              make it slightly challenging, we have the background color change
+              every half a second. On the side, there are random non-circular
+              balls just slowly floating around. On the bottom of the game
+              board, it list the words you needed to spell. If you spell the
+              word right, the word would light up and give you the math
+              question. Only if you get the math question right, you clear the
+              word. There is a time limit of 2 minutes. <br>
+            </h4>
             <p><br>
             </p>
             <p> </p>
@@ -110,38 +211,42 @@
             <p> I was born in Shanghai, China in 2009.<br>
             </p>
           </div>
-          <div style="clear: both;"></div>
-          <div id="tswfooter" style="background: #FDCAE8">
+          <a <="" h4="">
+            <div style="clear: both;"></div>
+            <div id="tswfooter" style="background: #FDCAE8">
+              <p><br>
+              </p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <br> </p>
+              <h1><img src="images/Copyright.png" alt="Copyright logo" title="Copyright"
+
+                  style="width: 51px; height: 29px;">&nbsp; All rights are
+                reserved </h1>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
+            <div style="background: #FDCAE8"><br>
+              <h1></h1>
+              <h1></h1>
+              <h1></h1>
+              <h1></h1>
+              <h1></h1>
+              <h1></h1>
+              <h1> </h1>
+            </div>
+          </a></div>
+        <a <="" h4=""> </a></div>
+      <a <="" h4=""> </a></div>
+    <a <="" h4=""> </a>
+    <div id="tswsidecol" style="background: #D3FAFE"><a <="" h4=""> </a>
+      <div id="tswsideproper"><a <="" h4="">
+          <p> </p>
+        </a>
+        <div id="tswcssbuttons"><a <="" h4="">
             <p><br>
             </p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <br> </p>
-            <h1><img src="images/Copyright.png" alt="Copyright logo" title="Copyright"
-
-                style="width: 51px; height: 29px;">&nbsp; All rights are
-              reserved </h1>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
-          <div style="background: #FDCAE8"><br>
-            <h1></h1>
-            <h1></h1>
-            <h1></h1>
-            <h1></h1>
-            <h1></h1>
-            <h1></h1>
-            <h1> </h1>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="tswsidecol" style="background: #D3FAFE">
-      <div id="tswsideproper">
-        <p> </p>
-        <div id="tswcssbuttons">
-          <p><br>
-          </p>
-          <p><br>
-            <ul=""> </ul=""></p>
-          <li><a href="index.html" style="background: #CBE3FF; color: red;">Home</a></li>
+            <p><br>
+              <ul=""> </ul=""></p>
+          </a>
+          <li><a <="" h4=""></a><a href="index.html" style="background: #CBE3FF; color: red;">Home</a></li>
           <li><a href="aboutme.html" style="background: #CBE3FF; color: purple;">About
               Me</a></li>
           <li><a href="education.html" style="background: #CBE3FF; color: blue;">Education</a></li>
@@ -240,6 +345,186 @@
           }
         }, 2000); // Switch color every 2 seconds
       });
+
+      // New script block for the Spanish Conjugation Game
+      // This ensures it doesn't affect other existing scripts
+      const verbs = {
+          "hablar": {
+              "yo": "hablo", "tú": "hablas", "él/ella/usted": "habla",
+              "nosotros": "hablamos", "vosotros": "habláis", "ellos/ellas/ustedes": "hablan"
+          },
+          "comer": {
+              "yo": "como", "tú": "comes", "él/ella/usted": "come",
+              "nosotros": "comemos", "vosotros": "coméis", "ellos/ellas/ustedes": "comen"
+          },
+          "vivir": {
+              "yo": "vivo", "tú": "vives", "él/ella/usted": "vive",
+              "nosotros": "vivimos", "vosotros": "vivís", "ellos/ellas/ustedes": "viven"
+          }
+      };
+
+      let currentVerb;
+      let currentPronoun;
+
+      function newQuestion() {
+          const verbKeys = Object.keys(verbs);
+          currentVerb = verbKeys[Math.floor(Math.random() * verbKeys.length)];
+
+          const pronounKeys = Object.keys(verbs[currentVerb]);
+          currentPronoun = pronounKeys[Math.floor(Math.random() * pronounKeys.length)];
+
+          document.getElementById('game-verb').textContent = currentVerb;
+          document.getElementById('game-pronoun').textContent = currentPronoun;
+          document.getElementById('game-answer').value = '';
+          document.getElementById('game-feedback').textContent = '';
+          document.getElementById('game-feedback').style.color = 'black';
+      }
+
+      function checkConjugation() {
+          const userAnswer = document.getElementById('game-answer').value.trim().toLowerCase();
+          const correctAnswer = verbs[currentVerb][currentPronoun].toLowerCase();
+          const feedbackElement = document.getElementById('game-feedback');
+
+          if (userAnswer === correctAnswer) {
+              feedbackElement.textContent = 'Correct! ¡Excelente!';
+              feedbackElement.style.color = 'green';
+          } else {
+              feedbackElement.textContent = `Incorrect. The correct answer is "${correctAnswer}".`;
+              feedbackElement.style.color = 'red';
+          }
+      }
+
+      // Initialize the first question when the page loads
+      document.addEventListener('DOMContentLoaded', newQuestion);
+
+      // --- Biology Practice Game Script ---
+      const biologyQuestions = [
+          {
+              question: "What is the primary function of the mitochondria in a cell?",
+              options: ["Protein synthesis", "Energy production", "Waste removal", "Photosynthesis"],
+              answer: "Energy production"
+          },
+          {
+              question: "Which process do plants use to convert sunlight into energy?",
+              options: ["Respiration", "Transpiration", "Photosynthesis", "Fermentation"],
+              answer: "Photosynthesis"
+          },
+          {
+              question: "What molecule carries genetic information from the nucleus to the cytoplasm for protein synthesis?",
+              options: ["DNA", "tRNA", "mRNA", "rRNA"],
+              answer: "mRNA"
+          },
+          {
+              question: "What is the basic unit of heredity?",
+              options: ["Cell", "Tissue", "Organ", "Gene"],
+              answer: "Gene"
+          },
+          {
+              question: "Which of these is a primary producer in a food chain?",
+              options: ["Lion", "Grass", "Mushroom", "Human"],
+              answer: "Grass"
+          },
+          {
+              question: "How many chambers are in the human heart?",
+              options: ["Two", "Three", "Four", "Five"],
+              answer: "Four"
+          },
+          {
+              question: "What is the process by which organisms adapt to their environment over time?",
+              options: ["Metabolism", "Homeostasis", "Evolution", "Reproduction"],
+              answer: "Evolution"
+          },
+          {
+              question: "Which gas is primarily responsible for the greenhouse effect?",
+              options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+              answer: "Carbon Dioxide"
+          },
+          {
+              question: "What is the full name of DNA?",
+              options: ["Deoxyribonucleic Acid", "Deoxyribose Nucleic Acid", "Dioxide Nucleic Acid", "Deoxyribonucleic Aminoacid"],
+              answer: "Deoxyribonucleic Acid"
+          },
+          {
+              question: "What is the function of red blood cells?",
+              options: ["Fight infection", "Clot blood", "Carry oxygen", "Produce antibodies"],
+              answer: "Carry oxygen"
+          },
+          {
+              question: "Which part of the plant absorbs water and nutrients from the soil?",
+              options: ["Leaves", "Stem", "Flowers", "Roots"],
+              answer: "Roots"
+          }
+      ];
+
+      let currentBioQuestion;
+
+      function newBioQuestion() {
+          currentBioQuestion = biologyQuestions[Math.floor(Math.random() * biologyQuestions.length)];
+          document.getElementById('bio-question').textContent = currentBioQuestion.question;
+          const answersContainer = document.getElementById('bio-answers');
+          answersContainer.innerHTML = '';
+          document.getElementById('bio-feedback').textContent = '';
+          currentBioQuestion.options.forEach(option => {
+              const button = document.createElement('button');
+              button.textContent = option;
+              button.onclick = () => checkBioAnswer(option);
+              answersContainer.appendChild(button);
+          });
+      }
+
+      function checkBioAnswer(selectedOption) {
+          const feedbackElement = document.getElementById('bio-feedback');
+          feedbackElement.textContent = (selectedOption === currentBioQuestion.answer) ? 'Correct! Great job!' : `Incorrect. The correct answer is "${currentBioQuestion.answer}".`;
+          feedbackElement.style.color = (selectedOption === currentBioQuestion.answer) ? 'green' : 'red';
+          Array.from(document.getElementById('bio-answers').getElementsByTagName('button')).forEach(b => b.disabled = true);
+      }
+
+      // Initialize the first biology question when the page loads
+      document.addEventListener('DOMContentLoaded', newBioQuestion);
+
+      // --- Algebra & Geometry Game Script ---
+      const mathQuestions = [
+          { question: "A right triangle has legs of length 3 and 4. What is the length of the hypotenuse?", answer: "5" }, // Geometry
+          { question: "What is the value of log₂(8)?", answer: "3" }, // Algebra 2 - Logarithms
+          { question: "What is the sum of the interior angles of a hexagon in degrees?", answer: "720" }, // Geometry
+          { question: "Solve for x: x² - 4x - 5 = 0. Enter the positive solution.", answer: "5" }, // Algebra 2 - Quadratic Equations
+          { question: "What is the area of a circle with a radius of 10? Use 3.14 for π.", answer: "314" }, // Geometry
+          { question: "What is the volume of a cube with a side length of 4?", answer: "64" }, // Geometry
+          { question: "If f(x) = 3x - 2, what is f(5)?", answer: "13" }, // Algebra 2 - Functions
+          { question: "What is the slope of the line passing through (1, 2) and (3, 8)?", answer: "3" }, // Algebra 2 - Linear Equations
+          { question: "If a circle has a circumference of 10π, what is its radius?", answer: "5" }, // Geometry
+          { question: "Simplify: (x^2)^3", answer: "x^6" }, // Algebra 2 - Exponents (Note: user needs to type x^6)
+          { question: "What is the measure of each interior angle of a regular octagon?", answer: "135" }, // Geometry
+          { question: "Solve for x: |x - 3| = 5. Enter the positive solution.", answer: "8" }, // Algebra 2 - Absolute Value
+          { question: "What is the distance between points (0,0) and (3,4)?", answer: "5" }, // Geometry - Distance Formula
+          { question: "If 2x + 5 = 11, what is x?", answer: "3" }, // Algebra 2 - Basic Equations
+          { question: "What is the area of a triangle with base 6 and height 4?", answer: "12" } // Geometry
+      ];
+
+      let currentMathQuestion;
+
+      function newMathQuestion() {
+          currentMathQuestion = mathQuestions[Math.floor(Math.random() * mathQuestions.length)];
+          document.getElementById('math-question').textContent = currentMathQuestion.question;
+          document.getElementById('math-answer').value = '';
+          document.getElementById('math-feedback').textContent = '';
+          document.getElementById('math-feedback').style.color = 'black';
+      }
+
+      function checkMathAnswer() {
+          const userAnswer = document.getElementById('math-answer').value.trim();
+          const feedbackElement = document.getElementById('math-feedback');
+          if (userAnswer === currentMathQuestion.answer) {
+              feedbackElement.textContent = 'Correct! You are a math whiz!';
+              feedbackElement.style.color = 'green';
+          } else {
+              feedbackElement.textContent = `Not quite. The correct answer is ${currentMathQuestion.answer}.`;
+              feedbackElement.style.color = 'red';
+          }
+      }
+
+      // Initialize the first math question when the page loads
+      document.addEventListener('DOMContentLoaded', newMathQuestion);
     </script>
   </body>
 </html>

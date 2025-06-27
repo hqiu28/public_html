@@ -141,3 +141,19 @@ function displayPollution() {
 
     pollutionReport.innerHTML = `${aqiReport}<br>Components: ${JSON.stringify(omPollution.json.list[0].components)}`;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const backgroundGradients = [
+        'linear-gradient(to right, #434343 0%, black 100%)', // Dark grey
+        'linear-gradient(to right, #09203f 0%, #537895 100%)', // Dark blue
+        'linear-gradient(to right, #2c3e50, #4ca1af)', // Dark teal
+        'linear-gradient(to right, #373b44, #4286f4)', // Grey to blue
+        'linear-gradient(to right, #141e30, #243b55)'  // Deep dark blue
+    ];
+    let colorIndex = 0;
+
+    setInterval(() => {
+        colorIndex = (colorIndex + 1) % backgroundGradients.length;
+        document.body.style.background = backgroundGradients[colorIndex];
+    }, 2000);
+});

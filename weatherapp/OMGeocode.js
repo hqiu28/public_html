@@ -6,6 +6,24 @@ class OMGeocode {
         this.limit = 1;
         this.json = null;
     }    request(callback) {
+        // Parse the city input to extract city, state, and country
+        let fullQuery = this.city.trim();
+        let cityName = fullQuery;
+        let desiredState = null;
+        let desiredCountry = this.country;
+        
+        // Extract city, state, and country from input like "Worcester, MA" or "Worcester, MA, US"
+        if (fullQuery.includes(',')) {
+            let parts = fullQuery.split(',').map(part => part.trim());
+            cityName = parts[0];
+            if (parts.length >= 2) {
+                desiredState = parts[1];
+            }
+            if (parts.length >= 3) {
+                desiredCountry = parts[2];
+            }
+        }
+        
         var xhttp = new XMLHttpRequest();
         let self = this;
 
@@ -29,7 +47,59 @@ class OMGeocode {
                     return;
                 }
                 
-                self.json = response;
+                // Filter results based on state and country
+                let filteredResults = response.results;
+                
+                // If we have a desired state, filter by it
+                if (desiredState) {
+                    filteredResults = filteredResults.filter(result => {
+                        let resultState = result.admin1 || result.admin2 || "";
+                        
+                        // Create a mapping of common state abbreviations to full names
+                        const stateMap = {
+                            'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                            'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                            'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                            'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                            'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                            'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                            'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                            'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                            'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                            'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+                        };
+                        
+                        // Get the full state name if the desired state is an abbreviation
+                        let fullStateName = stateMap[desiredState.toUpperCase()] || desiredState;
+                        
+                        // Check for exact match with full state name
+                        return resultState.toLowerCase() === fullStateName.toLowerCase() ||
+                               resultState.toLowerCase() === desiredState.toLowerCase();
+                    });
+                }
+                
+                // If we have a desired country, filter by it
+                if (desiredCountry) {
+                    filteredResults = filteredResults.filter(result => {
+                        let resultCountry = result.country_code || result.country || "";
+                        return resultCountry.toLowerCase() === desiredCountry.toLowerCase() ||
+                               resultCountry.toLowerCase().startsWith(desiredCountry.toLowerCase());
+                    });
+                }
+                
+                // If no filtered results, fall back to the first result
+                if (filteredResults.length === 0) {
+                    console.warn(`No exact match found for "${self.city}". Using first available result.`);
+                    filteredResults = [response.results[0]];
+                }
+                
+                // Create filtered response
+                self.json = {
+                    results: filteredResults
+                };
+                
+                console.log(`Filtered to ${filteredResults.length} result(s):`, filteredResults);
+                
                 if (callback !== undefined) {
                     callback();
                 }
@@ -39,19 +109,11 @@ class OMGeocode {
             }
         }
         
-        // Clean up the city name for Open-Meteo API
-        let searchQuery = this.city.trim();
+        // Search for all cities with this name (increase count to get more results)
+        let searchQuery = encodeURIComponent(cityName);
+        let searchCount = 100; // Get more results to filter through
         
-        // Remove state/country suffixes that might confuse the API
-        // But keep the full search if it doesn't have commas
-        if (searchQuery.includes(',')) {
-            searchQuery = searchQuery.split(',')[0].trim(); // Take only the city part
-        }
-        
-        // Encode for URL
-        searchQuery = encodeURIComponent(searchQuery);
-        
-        let URL = `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}&count=${this.limit}&language=en&format=json`;
+        let URL = `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}&count=${searchCount}&language=en&format=json`;
         
         console.log(`Geocoding request: ${URL}`);
         xhttp.open("GET", URL, true);
